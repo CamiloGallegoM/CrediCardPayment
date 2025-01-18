@@ -77,3 +77,5 @@ To learn more about React Native, take a look at the following resources:
 - [Learn the Basics](https://reactnative.dev/docs/getting-started) - a **guided tour** of the React Native **basics**.
 - [Blog](https://reactnative.dev/blog) - read the latest official React Native **Blog** posts.
 - [`@facebook/react-native`](https://github.com/facebook/react-native) - the Open Source; GitHub **repository** for React Native.
+# CrediCardPayment
+Este proyecto es una aplicación móvil en React Native (TypeScript) que simula un proceso de pago con tarjeta de crédito. La app permite a los usuarios seleccionar productos, ingresar datos de tarjeta, realizar un pago simulado y mostrar el resultado de la transacción
