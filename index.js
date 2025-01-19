@@ -7,6 +7,7 @@ import App from './App';
 import {name as appName} from './app.json';
 import { Provider } from 'react-redux';
 import { store } from './src/store';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 Text.defaultProps = { ...(Text.defaultProps || {}), allowFontScaling: false };
 TextInput.defaultProps = { ...(TextInput.defaultProps || {}), allowFontScaling: false };
@@ -14,7 +15,9 @@ TextInput.defaultProps = { ...(TextInput.defaultProps || {}), allowFontScaling: 
 const RootApp = () =>{
     return(
         <Provider store={store} >
-            <App/>
+            <SafeAreaProvider>
+                <App/>
+            </SafeAreaProvider>
         </Provider>
     );
 };
