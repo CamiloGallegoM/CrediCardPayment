@@ -7,5 +7,5 @@ const height = Dimensions.get('window').height
 export const GlobalConstants = {
     WIDTH: width,
     HEIGTH: height,
-    RADIUS_BORDER: 1 - 1 /width,
+    RADIUS_BORDER: (1 - 1 /width)*15,
 };

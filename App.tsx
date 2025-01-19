@@ -1,47 +1,34 @@
-import React from 'react';
-import {SafeAreaView,ScrollView,StatusBar,StyleSheet,Text,TouchableOpacity,useColorScheme,View} from 'react-native';
-import { Colors, Header} from 'react-native/Libraries/NewAppScreen';
-import { useAppDispatch, useAppSelector } from './src/hooks/reduxHook';
-import { increment } from './src/slices/counter/counterSlice';
+import React, { useCallback, useEffect } from 'react';
+import {SafeAreaView,StatusBar,useColorScheme} from 'react-native';
+import { Colors} from 'react-native/Libraries/NewAppScreen';
 import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import HomeScreenComponent from './src/layout/screens/Home/HomeScreen';
-import TransactionScreenComponent from './src/layout/screens/Transactions/TransactionScreen';
-
-
-
-
-
-const Stack = createNativeStackNavigator();
-
-function RootStack() {
-  return (
-    <Stack.Navigator>
-      <Stack.Screen name="Home" component={HomeScreenComponent} />
-      <Stack.Screen name="Transactions" component={TransactionScreenComponent} />
-    </Stack.Navigator>
-  );
-}
-
+import { HomeStack } from './src/layout/containers/stack/HomeStack';
+import { generateFakeProducts } from './src/utils/generateProducts';
+import BottomNavigatorContainer from './src/layout/containers/BottomNavigator';
+import { useAppDispatch } from './src/hooks/reduxHook';
+import { setProducts } from './src/slices/products/productSlice';
 
 
 function App(): React.JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
-  const dispatch = useAppDispatch()
-  const handleIncrement = () => dispatch(increment())
+    const isDarkMode = useColorScheme() === 'dark';
+    const backgroundStyle = {  backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,};
+    const dispatch = useAppDispatch();
 
+    const fetchProducts = useCallback(() => {
+        const dataProducts = generateFakeProducts(20);
+        dispatch(setProducts(dataProducts));
+    }, []);
 
-  const counter = useAppSelector((state) => state.counter.value);
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
-  };
+    useEffect(() => {
+        fetchProducts();
+    }, []);
+
 
   return (
     <NavigationContainer  >
         <SafeAreaView style={[backgroundStyle, {flex: 1}]}>
             <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} backgroundColor={backgroundStyle.backgroundColor} />
-            <RootStack/> 
-            
+            <BottomNavigatorContainer/> 
         </SafeAreaView>
     </NavigationContainer>
   );
