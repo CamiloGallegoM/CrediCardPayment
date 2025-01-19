@@ -9,7 +9,7 @@ export const generateFakeProducts = (count: number = 10): Product[] => {
       description: faker.commerce.productDescription(),
       price: parseFloat(faker.commerce.price({ min: 10, max: 500 })), 
       category: faker.commerce.department(),
-      image: faker.image.urlLoremFlickr({ width: 600, height: 400, category: 'product' }), 
+      image: faker.image.url({ width: 600, height: 400 }), 
       stock: faker.number.int({ min: 0, max: 10 }), 
     }));
 };
