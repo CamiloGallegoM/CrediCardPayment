@@ -3,6 +3,26 @@ import {SafeAreaView,ScrollView,StatusBar,StyleSheet,Text,TouchableOpacity,useCo
 import { Colors, Header} from 'react-native/Libraries/NewAppScreen';
 import { useAppDispatch, useAppSelector } from './src/hooks/reduxHook';
 import { increment } from './src/slices/counter/counterSlice';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import HomeScreenComponent from './src/layout/screens/Home/HomeScreen';
+import TransactionScreenComponent from './src/layout/screens/Transactions/TransactionScreen';
+
+
+
+
+
+const Stack = createNativeStackNavigator();
+
+function RootStack() {
+  return (
+    <Stack.Navigator>
+      <Stack.Screen name="Home" component={HomeScreenComponent} />
+      <Stack.Screen name="Transactions" component={TransactionScreenComponent} />
+    </Stack.Navigator>
+  );
+}
+
 
 
 function App(): React.JSX.Element {
@@ -17,20 +37,13 @@ function App(): React.JSX.Element {
   };
 
   return (
-    <SafeAreaView style={backgroundStyle}>
-      <StatusBar
-        barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-        backgroundColor={backgroundStyle.backgroundColor}
-      />
-      <ScrollView  contentInsetAdjustmentBehavior="automatic"  style={backgroundStyle} contentContainerStyle={{justifyContent:'center', alignItems:'center'}}  >
-        <View style={{  backgroundColor: isDarkMode ? Colors.black : Colors.white }}>
-          <Text style={{color: isDarkMode ? Colors.white : Colors.black}}>Configuración folders {counter} </Text>
-        </View>
-        <TouchableOpacity onPress={handleIncrement} style={{marginTop: 20}}>
-          <Text style={{color: isDarkMode ? Colors.white : Colors.black}}>incrementar </Text>
-        </TouchableOpacity>
-      </ScrollView>
-    </SafeAreaView>
+    <NavigationContainer  >
+        <SafeAreaView style={[backgroundStyle, {flex: 1}]}>
+            <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} backgroundColor={backgroundStyle.backgroundColor} />
+            <RootStack/> 
+            
+        </SafeAreaView>
+    </NavigationContainer>
   );
 };
 
