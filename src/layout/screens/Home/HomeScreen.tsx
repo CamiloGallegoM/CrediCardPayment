@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, FlatList, Image, TouchableOpacity, Button } from 'react-native';
+import { View, FlatList, Image, TouchableOpacity, Button, StyleSheet } from 'react-native';
 import { Text } from "../../../components/TextCustom/TextDefault";
 import { GlobalConstants } from "../../../constants/generalConstants";
 import ColorTheme from "../../../constants/colors/theme";
@@ -21,8 +21,6 @@ const HomeScreenComponent: React.FC<Props> = (props) => {
     const [selectedProducts, setSelectedProducts] = useState<Product[]>([]);
     const dataProducts: Product[] = useAppSelector((state) => state.product.products);
     const dispatch = useAppDispatch();
-    
-    
 
     const toggleProductSelection = (product: Product) => {
         setSelectedProducts((prevSelectedProducts) => {
@@ -35,27 +33,13 @@ const HomeScreenComponent: React.FC<Props> = (props) => {
     };
 
     const RenderProduct = ({ item }: { item: Product }) => {
-        const isSelected = selectedProducts.some(p => p.id === item.id);
+        const isSelected = selectedProducts.some(product => product.id === item.id);
         return (
-            <TouchableOpacity 
-                onPress={() => toggleProductSelection(item)}
-                activeOpacity={0.8}
-                style={{
-                    padding: 10,
-                    borderBottomWidth: 1,
-                    borderBottomColor: '#ccc',
-                    backgroundColor: ColorTheme.light.white,
-                    flexDirection: 'row',
-                    borderRadius: GlobalConstants.RADIUS_BORDER,
-                    marginVertical: 5,
-                    borderColor: isSelected ? ColorTheme.light.primary : 'transparent', 
-                    borderWidth: isSelected ? 0.5 : 0 
-                }}
-            >
+            <TouchableOpacity  activeOpacity={0.7} style={style.productContainer}  onPress={() => toggleProductSelection(item)} >
                 <Image source={{ uri: item.image }} style={{ width: 100, height: 100, borderRadius: GlobalConstants.RADIUS_BORDER*0.6 }} />
                 <View style={{ flex: 1, paddingHorizontal: 10, justifyContent: 'space-between' }}>
                     <Text style={{ fontSize: 14, fontWeight: '500' }}>{item.name}</Text>
-                    <Text style={{ fontSize: 10 }}>{item.description}</Text>
+                    <Text numberOfLines={2} style={{ fontSize: 10 }}>{item.description}</Text>
                     <Text style={{ fontSize: 10 }}>{`${StringsHome.available} ${item.stock}`}</Text>
                     <View  style={{alignItems:'center', flexDirection:'row', justifyContent:'space-between'}} >
                         <Text style={{ fontSize: 14, fontWeight: '500' }}>{`${StringsHome.price} ${formatCurrency(item.price)}`}</Text>
@@ -89,3 +73,16 @@ const HomeScreenComponent: React.FC<Props> = (props) => {
 };
 
 export default HomeScreenComponent;
+
+const style = StyleSheet.create({
+    productContainer: {
+        padding: 10,
+        borderWidth: 1,
+        borderColor: ColorTheme.light.borderColor,
+        borderRadius: GlobalConstants.RADIUS_BORDER,
+        backgroundColor: ColorTheme.light.white,
+        flexDirection: 'row',
+        marginVertical: 5,
+    },
+
+});

@@ -1,5 +1,5 @@
 import { FC, useEffect, useRef } from "react"
-import { FlatList, Image, ScrollView, TouchableOpacity, View } from "react-native"
+import { FlatList, Image, ScrollView, StyleSheet, TouchableOpacity, View } from "react-native"
 import { Text } from "../../../components/TextCustom/TextDefault"
 import { useAppDispatch, useAppSelector } from "../../../hooks/reduxHook";
 import { CartProducts } from "../../../interfaces/cartInterface";
@@ -13,14 +13,22 @@ import { formatCurrency } from "../../../utils/formatCurrency";
 import { setCartPay } from "../../../slices/cart/cartSlice";
 import { getTotalPay } from "../../../utils/getTotalPay";
 import { RouteNameNavigation } from "../../routes/routes";
+import { DetailsPayComponent } from "./components/detailsPay";
+import { AddCrediCartComponent } from "./components/addCrediCard";
+import { ModalComponent } from "../../../components/ModalCustom/ModalCustom";
+import { useStateBoolean } from "../../../hooks/useStateBool";
+import AddCreditCardForm from "./components/formAddCreditCard";
 
 interface Props {
     navigation: any
 }
 export const  CartScreenComponent:FC<Props> = (props)=> {
+
+    const[isShowModal, onShowModal, onCloseModal] = useStateBoolean(false);
     const dataCartPay:CartProducts  = useAppSelector((state) => state.cart);
     const dispatch = useAppDispatch();
     const flatListRef = useRef<FlatList<Product>>(null);
+    
 
     const removeItemProduct = (id:string) => {
         const newProducts = dataCartPay.products.filter((product:Product) => (product.id) !== id);
@@ -30,17 +38,7 @@ export const  CartScreenComponent:FC<Props> = (props)=> {
 
     const RenderProduct = ({ item }: { item: Product }) => {
         return (
-            <View 
-                style={{
-                    padding: 10,
-                    borderWidth: 1,
-                    borderColor: ColorTheme.light.borderColor,
-                    borderRadius: GlobalConstants.RADIUS_BORDER,
-                    backgroundColor: ColorTheme.light.white,
-                    flexDirection: 'row',
-                    marginVertical: 5,
-                }}
-            >
+            <View    style={style.cartProductContainer} >
                 <Image source={{ uri: item.image }} style={{ width: 100, height: 100, borderRadius: GlobalConstants.RADIUS_BORDER*0.6 }} />
                 <View style={{ flex: 1, paddingHorizontal: 10, justifyContent: 'space-between' }}>
                     <Text style={{ fontSize: 14, fontWeight: '500' }}>{item.name}</Text>
@@ -63,6 +61,7 @@ export const  CartScreenComponent:FC<Props> = (props)=> {
         })
         dataCartPay.products.length===0 && props.navigation.navigate(RouteNameNavigation.HomeNameScreen);
     }, [dataCartPay.quantityProducts]);
+
     useEffect(() => {
         setTimeout(() => {
             dataCartPay.products.length>2 &&  flatListRef.current?.scrollToOffset({ offset: 30, animated: true });
@@ -83,33 +82,24 @@ export const  CartScreenComponent:FC<Props> = (props)=> {
                 />
             </View>
             <ScrollView  style={{flex:1, backgroundColor:ColorTheme.light.grayLight, paddingHorizontal:5}} >
-                <View  style={{padding:10, marginVertical:5,  backgroundColor:ColorTheme.light.white, borderRadius:GlobalConstants.RADIUS_BORDER}} >
-                    <Text style={{color:ColorTheme.light.textPrimary, fontSize:18, fontWeight:'bold'}}  >Detalles de la compra</Text>
-
-                    <View  style={{flexDirection:'row', justifyContent:'space-between', alignItems:'center', marginVertical:5}} >
-                        <Text style={{color:ColorTheme.light.textPrimary, fontSize:16, fontWeight:'bold'}}  >Total de articulos:</Text>
-                        <Text style={{color:ColorTheme.light.textPrimary, fontSize:16}}  >{`${dataCartPay.quantityProducts}`}</Text>
-                    </View>
-                    
-                    <View  style={{flexDirection:'row', justifyContent:'space-between', alignItems:'center', marginVertical:5}} >
-                        <Text style={{color:ColorTheme.light.textPrimary, fontSize:16, fontWeight:'bold'}}  >Envio:</Text>
-                        <Text style={{color:ColorTheme.light.success, fontSize:16, fontWeight:'bold'}}  >{`Gratis`}</Text>
-                    </View>
-
-                    <View  style={{flexDirection:'row', justifyContent:'space-between', alignItems:'center', marginVertical:5}} >
-                        <Text style={{color:ColorTheme.light.textPrimary, fontSize:16, fontWeight:'bold'}}  >Total del pedido:</Text>
-                        <Text style={{color:ColorTheme.light.textPrimary, fontSize:18, fontWeight:'bold'}}  >{`${formatCurrency(dataCartPay.totalPay)}`}</Text>
-                    </View>
-                </View>
-                <View  style={{padding:10, marginVertical:5,  backgroundColor:ColorTheme.light.white, borderRadius:GlobalConstants.RADIUS_BORDER}} >
-                    <Text style={{color:ColorTheme.light.textPrimary, fontSize:18, fontWeight:'bold'}}  >Métodos de pago</Text>
-
-                    <TouchableOpacity  style={{flexDirection:'row', justifyContent:'center', alignItems:'center', marginVertical:15, borderRadius:GlobalConstants.RADIUS_BORDER*0.8, padding:10, backgroundColor:ColorTheme.light.primary}} >
-                        <Text style={{color:ColorTheme.light.white, fontSize:18, fontWeight:'bold', marginRight:5}}  >Agregar tarjeta </Text>
-                        <Icon name='card-outline' type='ionicon' size={25} color={ColorTheme.light.white}  />
-                    </TouchableOpacity>
-                </View>
+                <DetailsPayComponent  quantityProducts={dataCartPay.quantityProducts} totalPay={dataCartPay.totalPay}   />
+                <AddCrediCartComponent onHandleAddCreditCard={onShowModal} />
             </ScrollView>
+            <ModalComponent  isShow={isShowModal} onClose={onCloseModal} >
+                <AddCreditCardForm  />
+            </ModalComponent>
         </View>
     );   
 };
+
+const style = StyleSheet.create({
+    cartProductContainer: {
+        padding: 10,
+        borderWidth: 1,
+        borderColor: ColorTheme.light.borderColor,
+        borderRadius: GlobalConstants.RADIUS_BORDER,
+        backgroundColor: ColorTheme.light.white,
+        flexDirection: 'row',
+        marginVertical: 5,
+    },
+})
