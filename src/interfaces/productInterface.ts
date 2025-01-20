@@ -6,4 +6,7 @@ export interface Product {
     category: string;
     image: string;
     stock: number;
-  }
+}
+export interface ProductState {
+    products: Product[];
+}

@@ -1,4 +1,4 @@
-export const Strings = {
+export const StringsHome = {
     available:'Disponible:',
     price:'Precio:',
 }

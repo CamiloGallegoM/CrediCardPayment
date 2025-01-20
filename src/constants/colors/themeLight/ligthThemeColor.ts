@@ -11,4 +11,6 @@ export const LightThemeColors ={
     borderColor: "#E0E0E0",
     success: "#34A853",
     error: "#EA4335",
+    white:'#FFFFFF',
+    grayLight:'#EFF3EA',
 }

@@ -1,5 +1,5 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { HomeStackScreenComponent, TransactionStackScreenComponent } from "../../general";
+import { CartStackScreenComponent, HomeStackScreenComponent, TransactionStackScreenComponent } from "../../general";
 
 const Stack = createNativeStackNavigator();
 
@@ -8,6 +8,7 @@ export function HomeStack () {
         <Stack.Navigator>
             {HomeStackScreenComponent}
             {TransactionStackScreenComponent}
+            {CartStackScreenComponent}
         </Stack.Navigator>
     );
 };

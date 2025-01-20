@@ -3,11 +3,15 @@ import { View, FlatList, Image, TouchableOpacity, Button } from 'react-native';
 import { Text } from "../../../components/TextCustom/TextDefault";
 import { GlobalConstants } from "../../../constants/generalConstants";
 import ColorTheme from "../../../constants/colors/theme";
-import { Strings } from "../../../lang/ES/home/strings";
+import { StringsHome } from "../../../lang/ES/home/strings";
 import { Product } from '../../../interfaces/productInterface';
-import { useAppSelector } from '../../../hooks/reduxHook';
+import { useAppDispatch, useAppSelector } from '../../../hooks/reduxHook';
 import { Icon } from '@rneui/base';
 import { TouchablePayComponent } from './components/TouchablePay';
+import { getTotalPay } from '../../../utils/getTotalPay';
+import { setCartPay } from '../../../slices/cart/cartSlice';
+import { RouteNameNavigation } from '../../routes/routes';
+import { formatCurrency } from '../../../utils/formatCurrency';
 
 interface Props {
     navigation: any
@@ -16,6 +20,9 @@ interface Props {
 const HomeScreenComponent: React.FC<Props> = (props) => {
     const [selectedProducts, setSelectedProducts] = useState<Product[]>([]);
     const dataProducts: Product[] = useAppSelector((state) => state.product.products);
+    const dispatch = useAppDispatch();
+    
+    
 
     const toggleProductSelection = (product: Product) => {
         setSelectedProducts((prevSelectedProducts) => {
@@ -37,7 +44,7 @@ const HomeScreenComponent: React.FC<Props> = (props) => {
                     padding: 10,
                     borderBottomWidth: 1,
                     borderBottomColor: '#ccc',
-                    backgroundColor: 'white',
+                    backgroundColor: ColorTheme.light.white,
                     flexDirection: 'row',
                     borderRadius: GlobalConstants.RADIUS_BORDER,
                     marginVertical: 5,
@@ -49,9 +56,9 @@ const HomeScreenComponent: React.FC<Props> = (props) => {
                 <View style={{ flex: 1, paddingHorizontal: 10, justifyContent: 'space-between' }}>
                     <Text style={{ fontSize: 14, fontWeight: '500' }}>{item.name}</Text>
                     <Text style={{ fontSize: 10 }}>{item.description}</Text>
-                    <Text style={{ fontSize: 10 }}>{`${Strings.available} ${item.stock}`}</Text>
+                    <Text style={{ fontSize: 10 }}>{`${StringsHome.available} ${item.stock}`}</Text>
                     <View  style={{alignItems:'center', flexDirection:'row', justifyContent:'space-between'}} >
-                        <Text style={{ fontSize: 14, fontWeight: '500' }}>{`${Strings.price} $${item.price}`}</Text>
+                        <Text style={{ fontSize: 14, fontWeight: '500' }}>{`${StringsHome.price} ${formatCurrency(item.price)}`}</Text>
                         {isSelected && <Icon name='cart-check' type='material-community' size={25} color={ColorTheme.light.success}  />}
                     </View>
                 </View>
@@ -60,7 +67,9 @@ const HomeScreenComponent: React.FC<Props> = (props) => {
     };
 
     const handleAddToCart = () => {
-        console.log('Productos seleccionados:', selectedProducts.length);
+        const totalPay = getTotalPay(selectedProducts);
+        dispatch(setCartPay({ products: selectedProducts, quantityProducts: selectedProducts.length, totalPay }));
+        props.navigation.navigate(RouteNameNavigation.CartNameScreen);
     };
 
     return (
@@ -77,6 +86,6 @@ const HomeScreenComponent: React.FC<Props> = (props) => {
             }
         </View>
     );
-}
+};
 
 export default HomeScreenComponent;

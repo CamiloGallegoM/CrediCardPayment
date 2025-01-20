@@ -10,7 +10,7 @@ export const TouchablePayComponent:FC<TouchablePayComponentProps> = (props) => {
     return (
         <View  style={{justifyContent:'center', alignItems:'center', width:GlobalConstants.WIDTH}} > 
             <TouchableOpacity  onPress={props.handleAddToCart} style={{borderRadius:GlobalConstants.RADIUS_BORDER , backgroundColor:ColorTheme.light.primary, padding:5, marginVertical:12, width:GlobalConstants.WIDTH*0.5, alignItems:'center', justifyContent:'center'}} >
-                <Text style={{ fontSize: 16, fontWeight: '500', textAlign:'center', color:'white' }}>{`Ir a pagar (${props.numberProductSelect})`}</Text>
+                <Text style={{ fontSize: 16, fontWeight: '500', textAlign:'center', color:ColorTheme.light.white }}>{`Ir a pagar (${props.numberProductSelect})`}</Text>
             </TouchableOpacity>
         </View>
     )
